@@ -44,7 +44,7 @@ $ java TestR sample.R
 */
 grammar R;
 
-prog:   (   expr (';'|NL)
+prog:   (   expr (';'|NL)*
         |   NL
         )*
         EOF
@@ -61,7 +61,7 @@ expr:   expr '[[' sublist ']' ']'  // '[[' follows R's yacc grammar
     |   expr '[' sublist ']'
     |   expr ('::'|':::') expr
     |   expr ('$'|'@') expr
-    |   expr '^'<assoc=right> expr
+    |   <assoc=right> expr '^' expr
     |   ('-'|'+') expr
     |   expr ':' expr
     |   expr USER_OP expr // anything wrappedin %: '%' .* '%'
@@ -110,6 +110,7 @@ formlist : form (',' form)* ;
 form:   ID
     |   ID '=' expr
     |   '...'
+    |   '.'
     ;
 
 sublist : sub (',' sub)* ;
@@ -122,6 +123,7 @@ sub :   expr
     |   'NULL' '='
     |   'NULL' '=' expr
     |   '...'
+    |   '.'
     |
     ;
 
